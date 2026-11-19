@@ -1,0 +1,12 @@
+{
+    "text.autoconfig.suggestion-tweaker.title": "Suggestion Tweaker",
+    "text.autoconfig.suggestion-tweaker.option.isCaseSensitive": "区分大小写",
+    "text.autoconfig.suggestion-tweaker.option.enableInitials": "按单词开头搜索",
+    "text.autoconfig.suggestion-tweaker.option.filteringMode": "筛选模式",
+    "text.autoconfig.suggestion-tweaker.option.shouldHideSuggestionsWithPrefix": "隐藏以指定前缀开头的建议",
+    "text.autoconfig.suggestion-tweaker.option.hidePrefix": "要隐藏的建议前缀",
+    "suggestion-tweaker.filtering.strict": "严格",
+    "suggestion-tweaker.filtering.slightly_loose": "稍宽松",
+    "suggestion-tweaker.filtering.loose": "宽松",
+    "suggestion-tweaker.filtering.very_loose": "非常宽松"
+}

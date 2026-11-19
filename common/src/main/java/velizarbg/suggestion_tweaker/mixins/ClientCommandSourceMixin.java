@@ -4,8 +4,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.StringRange;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
-import net.minecraft.client.network.ClientCommandSource;
-import net.minecraft.command.CommandSource;
+import net.minecraft.client.multiplayer.ClientSuggestionProvider;
+import net.minecraft.commands.SharedSuggestionProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -20,15 +20,15 @@ import static velizarbg.suggestion_tweaker.Constants.config;
 /**
  * A workaround to the filtering of server-specific suggestions being outsourced to the server.
  */
-@Mixin(ClientCommandSource.class)
+@Mixin(ClientSuggestionProvider.class)
 public class ClientCommandSourceMixin {
-	private String currentInput;
-	private static final char[] SPECIAL_CUTOFF_CHARS = new char[]{'[', '=', ','};
+	@org.spongepowered.asm.mixin.Unique private String currentInput = "";
+	@org.spongepowered.asm.mixin.Unique private static final char[] SPECIAL_CUTOFF_CHARS = new char[]{'[', '=', ','};
 
 	/**
 	 * In order to fetch all possible suggestions the last argument needs to be empty.
 	 */
-	@Redirect(method = "getCompletions", at = @At(target = "Lcom/mojang/brigadier/context/CommandContext;getInput()Ljava/lang/String;", value = "INVOKE"))
+	@Redirect(method = "customSuggestion", at = @At(target = "Lcom/mojang/brigadier/context/CommandContext;getInput()Ljava/lang/String;", value = "INVOKE"))
 	private String processInput(CommandContext<?> context) {
 		String input = context.getInput();
 		int cutoffIndex = input.lastIndexOf(' ');
@@ -42,15 +42,15 @@ public class ClientCommandSourceMixin {
 		return input.substring(0, cutoffIndex + 1);
 	}
 
-	@ModifyVariable(method = "onCommandSuggestions", at = @At(target = "Ljava/util/concurrent/CompletableFuture;complete(Ljava/lang/Object;)Z", value = "INVOKE", shift = At.Shift.BEFORE), index = 2, argsOnly = true)
+	@ModifyVariable(method = "completeCustomSuggestions", at = @At(target = "Ljava/util/concurrent/CompletableFuture;complete(Ljava/lang/Object;)Z", value = "INVOKE", shift = At.Shift.BEFORE), index = 2, argsOnly = true)
 	private Suggestions filterSuggestions(Suggestions suggestions) {
 		int start = Integer.MAX_VALUE;
 		int end = Integer.MIN_VALUE;
 		List<Suggestion> suggestionList = new ArrayList<>();
 		for (Suggestion suggestion : suggestions.getList()) {
 			if (config.isCaseSensitive
-				? CommandSource.shouldSuggest(currentInput, suggestion.getText())
-				: CommandSource.shouldSuggest(currentInput.toLowerCase(Locale.ROOT), suggestion.getText().toLowerCase(Locale.ROOT))
+				? SharedSuggestionProvider.matchesSubStr(currentInput, suggestion.getText())
+				: SharedSuggestionProvider.matchesSubStr(currentInput.toLowerCase(Locale.ROOT), suggestion.getText().toLowerCase(Locale.ROOT))
 			) {
 				suggestionList.add(new Suggestion(
 					new StringRange(
@@ -64,6 +64,6 @@ public class ClientCommandSourceMixin {
 				end = Math.max(suggestion.getRange().getEnd(), end);
 			}
 		}
-		return new Suggestions(new StringRange(start, end), suggestionList);
+		return suggestionList.isEmpty() ? Suggestions.empty().join() : new Suggestions(StringRange.between(start, end + currentInput.length()), suggestionList);
 	}
 }

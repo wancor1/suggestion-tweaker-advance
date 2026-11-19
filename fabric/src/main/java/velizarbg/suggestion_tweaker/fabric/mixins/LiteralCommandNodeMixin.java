@@ -3,7 +3,7 @@ package velizarbg.suggestion_tweaker.fabric.mixins;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import net.minecraft.command.CommandSource;
+import net.minecraft.commands.SharedSuggestionProvider;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,7 +22,7 @@ public class LiteralCommandNodeMixin {
 	@Redirect(method = "listSuggestions", at = @At(value = "INVOKE", target = "Ljava/lang/String;startsWith(Ljava/lang/String;)Z"), remap = false)
 	private boolean doShouldSuggestCheck(String literalLowerCase, String remainingLowerCase, CommandContext<?> context, SuggestionsBuilder builder) {
 		return config.isCaseSensitive
-			? CommandSource.shouldSuggest(builder.getRemaining(), literal)
-			: CommandSource.shouldSuggest(remainingLowerCase, literalLowerCase);
+			? SharedSuggestionProvider.matchesSubStr(builder.getRemaining(), literal)
+			: SharedSuggestionProvider.matchesSubStr(remainingLowerCase, literalLowerCase);
 	}
 }

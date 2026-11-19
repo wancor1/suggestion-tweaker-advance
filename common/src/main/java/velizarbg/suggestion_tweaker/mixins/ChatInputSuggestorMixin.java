@@ -3,8 +3,8 @@ package velizarbg.suggestion_tweaker.mixins;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
-import net.minecraft.client.gui.screen.ChatInputSuggestor;
-import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.components.CommandSuggestions;
+import net.minecraft.client.gui.components.EditBox;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -16,12 +16,12 @@ import java.util.Locale;
 import static velizarbg.suggestion_tweaker.Constants.config;
 import static velizarbg.suggestion_tweaker.ModConfig.FilteringMode.*;
 
-@Mixin(ChatInputSuggestor.class)
+@Mixin(CommandSuggestions.class)
 public class ChatInputSuggestorMixin {
-	@Shadow private static int getStartOfCurrentWord(String input) {
+	@Shadow private static int getLastWordIndex(String input) {
 		throw new AssertionError();
 	}
-	@Shadow @Final TextFieldWidget textField;
+	@Shadow @Final EditBox input;
 
 	/**
 	 * @author VelizarBG
@@ -29,16 +29,17 @@ public class ChatInputSuggestorMixin {
 	 */
 	@Overwrite
 	private List<Suggestion> sortSuggestions(Suggestions suggestions) {
-		String command = textField.getText().substring(0, textField.getCursor());
+		String command = input.getValue().substring(0, input.getCursorPosition());
 		// To make sorting command literals work
 		if (command.startsWith("/"))
 			command = command.substring(1);
-		int startOfCurrentWord = getStartOfCurrentWord(command);
+		int startOfCurrentWord = getLastWordIndex(command);
 		String remaining = command.substring(startOfCurrentWord);
 		// To make sorting tags work
 		if (remaining.startsWith("#"))
 			remaining = remaining.substring(1);
 		List<Suggestion> strictList = Lists.newArrayList();
+		List<Suggestion> initialList = Lists.newArrayList();
 		List<Suggestion> slightlyLooseList = Lists.newArrayList();
 		List<Suggestion> looseList = Lists.newArrayList();
 		List<Suggestion> veryLooseList = Lists.newArrayList();
@@ -58,6 +59,8 @@ public class ChatInputSuggestorMixin {
 
 			if (STRICT.test(remaining, suggestionText))
 				strictList.add(suggestion);
+			else if (config.enableInitials && velizarbg.suggestion_tweaker.Initials.matches(remaining, suggestionText))
+				initialList.add(suggestion);
 			else if (SLIGHTLY_LOOSE.test(remaining, suggestionText))
 				slightlyLooseList.add(suggestion);
 			else if (LOOSE.test(remaining, suggestionText))
@@ -66,6 +69,7 @@ public class ChatInputSuggestorMixin {
 				veryLooseList.add(suggestion);
 		}
 
+		strictList.addAll(initialList);
 		strictList.addAll(slightlyLooseList);
 		strictList.addAll(looseList);
 		strictList.addAll(veryLooseList);

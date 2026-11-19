@@ -1,0 +1,12 @@
+{
+    "text.autoconfig.suggestion-tweaker.title": "Suggestion Tweaker",
+    "text.autoconfig.suggestion-tweaker.option.isCaseSensitive": "대소문자 구분",
+    "text.autoconfig.suggestion-tweaker.option.enableInitials": "단어 앞부분으로 검색",
+    "text.autoconfig.suggestion-tweaker.option.filteringMode": "필터링 모드",
+    "text.autoconfig.suggestion-tweaker.option.shouldHideSuggestionsWithPrefix": "지정된 접두사로 시작하는 제안 숨기기",
+    "text.autoconfig.suggestion-tweaker.option.hidePrefix": "숨길 제안의 접두사",
+    "suggestion-tweaker.filtering.strict": "엄격",
+    "suggestion-tweaker.filtering.slightly_loose": "약간 느슨함",
+    "suggestion-tweaker.filtering.loose": "느슨함",
+    "suggestion-tweaker.filtering.very_loose": "매우 느슨함"
+}

@@ -1,12 +1,2 @@
-pluginManagement {
-    repositories {
-        maven { url "https://maven.architectury.dev/" }
-        maven { url "https://maven.fabricmc.net/" }
-        maven { url "https://files.minecraftforge.net/maven/" }
-        gradlePluginPortal()
-    }
-}
-
-include("common")
-include("fabric")
-include("neoforge")
+pluginManagement { repositories { maven { url 'https://maven.fabricmc.net/' }; gradlePluginPortal() } }
+rootProject.name = 'suggestion-tweaker'

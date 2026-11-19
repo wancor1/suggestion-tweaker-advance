@@ -1,52 +1,80 @@
-# Suggestion Tweaker
+# Suggestion Tweaker Advance — Minecraft 26.2 Fabric
 
-This is a client/server mod that improves the way suggestions are filtered and sorted when writing a command.
+[日本語](#日本語)
 
-## Dependencies
+A Fabric port of [VelizarBG’s Suggestion Tweaker](https://github.com/VelizarBG/suggestion-tweaker) for Minecraft 26.2, with abbreviation matching for command suggestions.
 
-This mod requires [Cloth Config API](https://www.curseforge.com/minecraft/mc-mods/cloth-config). [Mod Menu](https://www.curseforge.com/minecraft/mc-mods/modmenu) is optional in case you want more configuration like enabling case sensitivity and changing the filtering mode.
+> [!NOTE]
+> AI was used to write changes in this fork. The maintainer tried the command completion in-game but has not reviewed the source changes.
 
-## Improved filtering
+## Abbreviation matching
 
-- Vanilla usually starts comparing the input with the start of the suggestion candidate and discards if it doesn't match. In some cases it checks for a `.` or `_` and then the input. This can often be annoying when trying to search for something because it is too strict. This mod changes that, so now you have a choice between different filtering modes:
-  - `STRICT` - the vanilla way
-  - `SLIGHTLY LOOSE` - shows all suggestions containing the input anywhere inside
-  - `LOOSE` - like the previous but with multiple words, separated by an underscore
-  - `VERY LOOSE` - shows all suggestions containing every letter in the input
+Type `/give @s acle` to find `minecraft:acacia_leaves`, then select the suggestion and press Tab to insert the full ID. Take as many letters as you like from the start of each word, in order:
 
+| Input | Suggestion | Matched parts |
+| --- | --- | --- |
+| `acle` | `minecraft:acacia_leaves` | `ac` + `le` |
+| `adoor` | `minecraft:acacia_door` | `a` + `door` |
+| `pdstairs` | `minecraft:polished_deepslate_stairs` | `p` + `d` + `stairs` |
+| `pdeepstai` | `minecraft:polished_deepslate_stairs` | `p` + `deep` + `stai` |
 
-- Suggestions with a specific prefix can be hidden. That applies to both directory and file names. For example, if the specific prefix is an underscore, an identifier named `datapack:_function` will be hidden and so will be `datapack:_directory/function` but `datapack:directory/function` won't be. It works for all identifiers, not just functions. This feature is disabled by default.
+Abbreviation matching is on by default. Standard prefix matches rank ahead of abbreviation matches. The original filtering modes, case-sensitivity option, and prefix-based hiding are still available.
 
-## Improved sorting
+The settings screen is available in English, Japanese, Korean, and Chinese (Simplified, Traditional for Taiwan, and Traditional for Hong Kong).
 
-Suggestions are sorted from the strictest to most loose match. Vanilla only sorts alphabetically, lacking multiple filtering modes.
+## Installation
 
-## Server and client
+- Minecraft **26.2** (Fabric only), Java **25 or newer**, and Fabric Loader **0.20.1 or newer**
+- Required: [Cloth Config API](https://modrinth.com/mod/cloth-config) **26.2.155 or newer**, using a Fabric build compatible with Minecraft 26.2
+- Optional: [Mod Menu](https://modrinth.com/mod/modmenu) for in-game settings (built against **20.0.3**)
 
-Suggestions can be separated into two groups:
-1. ones that are filtered on the server(based on the client's input);
-    - e.g. functions, loot tables, item modifiers, predicates, and a few others
-2. ones that are filtered on the client.
-    - e.g. scoreboard criteria, colors, blocks, and others
+Put the mod JAR and its dependencies in `mods`. If upgrading, remove the old Suggestion Tweaker JAR first.
 
-Since the first group's filtering is controlled by the server, a special workaround is established to let the client use the new way of filtering suggestions, independent of the server. Therefore, this mod is also a server mod and provides better suggestions even for clients without the mod.
+## Build from source
 
-## Examples
+With JDK 25, run `./gradlew build` from the repository root (`./gradlew.bat build` in Windows PowerShell). The JAR is written to `build/libs/`.
 
-Top - vanilla, bottom - Suggestion Tweaker.
+## Credits and license
 
-<img src="https://user-images.githubusercontent.com/31567122/163831589-613e5483-f946-4afa-b8a7-069d714d9943.png" width="512">
-<br/>
-<img src="https://user-images.githubusercontent.com/31567122/163831940-3ea6063e-1adc-494c-b3cc-91f358331c7f.png" width="512">
-<br/>
-<img src="https://user-images.githubusercontent.com/31567122/163832068-dca72913-b8bb-4cda-b827-ae49fd43beba.png" width="512">
+Original mod by [VelizarBG](https://github.com/VelizarBG/suggestion-tweaker), based on an idea by SnaveSutit. Licensed under the [MIT License](LICENSE).
 
-## Idea
+---
 
-Credit goes to SnaveSutit for the cool idea!
+## 日本語
 
-## Compiling
-* Clone the repository
-* Open a command prompt/terminal to the repository directory
-* Run 'gradlew build'
-* The built jar files will be in fabric/build/libs/ and neoforge/build/libs
+[VelizarBG の Suggestion Tweaker](https://github.com/VelizarBG/suggestion-tweaker) を Minecraft 26.2 の Fabric 向けに移植したフォーク。コマンド補完を絞り込み、欲しい候補を短い入力で探せるようにします。
+
+> [!NOTE]
+> このフォークの変更には AI を使っています。メンテナーはゲーム内でコマンド補完を試しましたが、ソースコードの変更箇所はレビューしていません。
+
+## 略称でコマンド補完
+
+たとえば `/give @s acle` と入力すると、`minecraft:acacia_leaves` が候補に出ます。候補を選んで Tab を押すと、正式な ID が入ります。
+
+| 入力 | 候補 | 一致した部分 |
+| --- | --- | --- |
+| `acle` | `minecraft:acacia_leaves` | `ac` + `le` |
+| `adoor` | `minecraft:acacia_door` | `a` + `door` |
+| `pdstairs` | `minecraft:polished_deepslate_stairs` | `p` + `d` + `stairs` |
+| `pdeepstai` | `minecraft:polished_deepslate_stairs` | `p` + `deep` + `stai` |
+| `pds` | `minecraft:polished_deepslate_stairs` | `p` + `d` + `s` |
+
+各単語の先頭から好きな長さだけ取って、元の順番でつなげられます。略称検索はデフォルトでオン。先頭一致の候補は略称一致より上に表示されます。元の絞り込みモード、大文字・小文字の区別、特定の接頭辞で始まる候補の非表示も引き続き使えます。
+
+設定画面の言語：英語、日本語、韓国語、中国語（簡体字・台湾繁体字・香港繁体字）。
+
+## インストール
+
+- Minecraft **26.2**（Fabric 専用）、Java **25 以上**、Fabric Loader **0.20.1 以上**
+- 必須：[Cloth Config API](https://modrinth.com/mod/cloth-config) の Fabric 版 **26.2.155 以上**（Minecraft 26.2 対応版）
+- 任意：[Mod Menu](https://modrinth.com/mod/modmenu)（ゲーム内で設定を変更する場合。ビルド時の参照バージョンは **20.0.3**）
+
+Mod の JAR と依存 Mod を `mods` フォルダに入れます。更新する場合は、旧版の Suggestion Tweaker の JAR と入れ替えてください。
+
+## ソースからビルド
+
+JDK 25 を使い、リポジトリのルートで `./gradlew build`（Windows PowerShell では `./gradlew.bat build`）を実行します。JAR は `build/libs/` に生成されます。
+
+## クレジット・ライセンス
+
+オリジナルは [VelizarBG / Suggestion Tweaker](https://github.com/VelizarBG/suggestion-tweaker)。元のアイデアは SnaveSutit。ライセンスは [MIT](LICENSE) です。

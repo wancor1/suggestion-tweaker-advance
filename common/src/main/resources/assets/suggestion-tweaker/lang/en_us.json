@@ -1,6 +1,7 @@
 {
     "text.autoconfig.suggestion-tweaker.title": "Suggestion Tweaker",
     "text.autoconfig.suggestion-tweaker.option.isCaseSensitive": "Enable case sensitivity",
+    "text.autoconfig.suggestion-tweaker.option.enableInitials": "Match word initials",
     "text.autoconfig.suggestion-tweaker.option.filteringMode": "Filtering Mode",
     "text.autoconfig.suggestion-tweaker.option.shouldHideSuggestionsWithPrefix": "Enable hiding suggestions with a specific prefix",
     "text.autoconfig.suggestion-tweaker.option.hidePrefix": "The specific prefix",

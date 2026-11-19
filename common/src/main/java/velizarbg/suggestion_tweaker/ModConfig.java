@@ -19,6 +19,9 @@ public class ModConfig implements ConfigData {
 	@Comment("Should case be taken into account when suggestions are filtered and sorted?")
 	public boolean isCaseSensitive = false;
 
+	@Comment("Match ordered word initials, e.g. pds for polished_deepslate_stairs")
+	public boolean enableInitials = true;
+
 	@ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
 	@Comment("""
 		What is the requirement for a suggestion to be shown?

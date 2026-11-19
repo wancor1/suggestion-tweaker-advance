@@ -1,0 +1,12 @@
+{
+    "text.autoconfig.suggestion-tweaker.title": "Suggestion Tweaker",
+    "text.autoconfig.suggestion-tweaker.option.isCaseSensitive": "大文字と小文字を区別する",
+    "text.autoconfig.suggestion-tweaker.option.enableInitials": "頭文字で検索する",
+    "text.autoconfig.suggestion-tweaker.option.filteringMode": "絞り込みモード",
+    "text.autoconfig.suggestion-tweaker.option.shouldHideSuggestionsWithPrefix": "指定した接頭辞で始まる候補を隠す",
+    "text.autoconfig.suggestion-tweaker.option.hidePrefix": "非表示にする候補の接頭辞",
+    "suggestion-tweaker.filtering.strict": "厳密",
+    "suggestion-tweaker.filtering.slightly_loose": "やや緩い",
+    "suggestion-tweaker.filtering.loose": "緩い",
+    "suggestion-tweaker.filtering.very_loose": "とても緩い"
+}
